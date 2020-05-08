@@ -19,8 +19,14 @@ $(document).ready(function(){
         var valcountry = $("input.search-txt").val().toLowerCase();
         console.log(valcountry);
         printData(valcountry);
+
+        $("div.minimized").click(function(){
+           var thisDiv = $(this).parent().attr("id");
+            $("div#body-"+ thisDiv).slideToggle();
+            });
         });
 
+        
 });
 
 function printData(val){
@@ -30,13 +36,13 @@ function printData(val){
                     console.log(country);
 
                     var html = $(`<div class="country-maximized">
-                    <div class="country-header">
+                    <div class="country-header" id="${country.Country}">
                 <div class="delete"><i class="fas fa-trash"></i></div>
                 <div class="flag"><img src="../flags/${country.CountryCode.toLowerCase()}.svg"></div>
                 <h1>${country.Country}</h1>
                 <div class="minimized"><i class="fas fa-minus"></i></div>
                     </div>
-                    <div class="country-body">
+                    <div class="country-body" id="body-${country.Country}">
                 <table>
                     <tr>
                         <th class="title">New confirmed</th>
@@ -61,7 +67,7 @@ function printData(val){
                 </table>
                 </div>
                 </div>`).appendTo("body");
-                }
+                };
             });
 
 };
