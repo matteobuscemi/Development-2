@@ -3,6 +3,7 @@ firebase.initializeApp({
     projectId: 'werkstuk-matteo-buscemi-dev-2'
   });
   
+  var selectedCountries;
   const database = firebase.firestore();
   const countryCollection = database.collection("Countries");
   
@@ -34,12 +35,13 @@ firebase.initializeApp({
   
       updatedCountries.sort(sortByTimeStamp);
   
-      console.log(updatedCountries);
       $("div.country-maximized").remove();
+      selectedCountries = updatedCountries;
       updatedCountries.forEach(function(updateCountry)
       {
       printData(updateCountry.countryName.toLowerCase(),updateCountry.id);
       });
+      
       $("div.delete").click(function(){
           var deletedCountryID = $(this).parent().parent().attr("id");
           database.collection("Countries").doc(deletedCountryID).delete();
@@ -76,6 +78,7 @@ firebase.initializeApp({
 
 var countries;
 
+
 $(document).ready(function(){
     getData();
 
@@ -88,27 +91,31 @@ $(document).ready(function(){
         
         }).then(user => {
             countries = user.Countries;
-            console.log(countries);
         });
         };
 
     $("i#addcountry").click(function(){
         var valcountry = $("input.search-txt").val().toLowerCase();
-        console.log(valcountry);
-        countries.forEach(function (country) {
+ 
+selectedCountries.forEach(function(selectedCountry){
 
-            if (country.Country.toLowerCase() == valcountry) {
-                console.log(country);
-                addCountry(country.Country);
-        };
-            });
+    console.log(selectedCountry.countryName);
+    if(selectedCountry.countryName.toLowerCase() == valcountry){
+        console.log("Already exists!");
+    }
+    else {
+            countries.forEach(function (country) {
+                if (country.Country.toLowerCase() == valcountry) {
+                    addCountry(country.Country);
+            };
+                }); 
         
-
+            };
     
         });
-
+    });
+    });
         
-});
 
 function printData(val,id){
     countries.forEach(function (country) {
