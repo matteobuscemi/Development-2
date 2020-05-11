@@ -38,10 +38,13 @@ firebase.initializeApp({
       $("div.country-maximized").remove();
       updatedCountries.forEach(function(updateCountry)
       {
-      printData(updateCountry.countryName.toLowerCase());
+      printData(updateCountry.countryName.toLowerCase(),updateCountry.id);
       });
       $("div.delete").click(function(){
+          var deletedCountryID = $(this).parent().parent().attr("id");
+          database.collection("Countries").doc(deletedCountryID).delete();
         $(this).parent().parent().remove();
+
 
         
     })
@@ -107,13 +110,13 @@ $(document).ready(function(){
         
 });
 
-function printData(val){
+function printData(val,id){
     countries.forEach(function (country) {
 
         if (country.Country.toLowerCase() == val) {
             console.log(country);
 
-                    var html = $(`<div class="country-maximized">
+                    var html = $(`<div class="country-maximized" id="${id}">
                     <div class="country-header" id="${country.CountryCode}">
                 <div class="delete"><i class="fas fa-trash"></i></div>
                 <div class="flag"><img src="../flags/${country.CountryCode.toLowerCase()}.svg"></div>
