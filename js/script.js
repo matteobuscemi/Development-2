@@ -1,7 +1,81 @@
+firebase.initializeApp({
+    apiKey: 'AIzaSyDGORK3IhV3odKm4x2b_ZFcGaeNbARGWvg',
+    projectId: 'werkstuk-matteo-buscemi-dev-2'
+  });
+  
+  const database = firebase.firestore();
+  const countryCollection = database.collection("Countries");
+  
+  
+  const convertQuerySnapshotToRegularArray = (querySnapshot) => querySnapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
+  
+  const sortByTimeStamp = (a, b) => {
+    if (a.timeStamp < b.timeStamp) {
+      return 1;
+    }
+    if (a.timeStamp > b.timeStamp) {
+      return -1;
+    }
+
+  };
+
+  async function addCountry(countryName) {
+    await countryCollection.add({
+      countryName,
+      timeStamp: new Date(),
+    });
+  };
+
+  async function renderCountries() {
+    countryCollection.onSnapshot((querySnapshot) => {
+  
+      const updatedCountries = convertQuerySnapshotToRegularArray(querySnapshot);
+  
+  
+      updatedCountries.sort(sortByTimeStamp);
+  
+      console.log(updatedCountries);
+      $("div.country-maximized").remove();
+      updatedCountries.forEach(function(updateCountry)
+      {
+      printData(updateCountry.countryName.toLowerCase());
+      });
+      $("div.delete").click(function(){
+        $(this).parent().parent().remove();
+
+        
+    })
+         $("div.minimized").click(function(){
+           var thisDiv = $(this).attr("id");
+           var thisDivClass = $(this).parent().attr("class");
+           var divI = $(this).children().attr("class");
+           console.log(divI);
+            if (divI == "fas fa-minus"){
+                
+                $("div#"+thisDiv+" i.fa-minus").attr("class","fas fa-chevron-down");
+                $("div#body-"+ thisDiv).slideUp();
+                $(this).parent().attr("class","country-minimized");
+                console.log("Test");
+            }
+            else {
+                $("div#"+thisDiv+" i.fa-chevron-down").attr("class","fas fa-minus");
+                $("div#body-"+ thisDiv).slideDown();
+                $(this).parent().attr("class","country-header");
+                console.log("Test");
+            }
+
+            });
+      });
+      
+    };
+
+    renderCountries();
+
 var countries;
 
 $(document).ready(function(){
     getData();
+
 
     function getData(){
         var url = "https://api.covid19api.com/summary";
@@ -18,42 +92,26 @@ $(document).ready(function(){
     $("i#addcountry").click(function(){
         var valcountry = $("input.search-txt").val().toLowerCase();
         console.log(valcountry);
-        printData(valcountry);
+        countries.forEach(function (country) {
 
-    $("div.delete").click(function(){
-        $(this).parent().parent().remove();
-        console.log("Blablabla");
-
-        
-    })
-         $("div.minimized").click(function(){
-           var thisDiv = $(this).attr("id");
-           var thisDivClass = $(this).parent().attr("class");
-           var divI = $(this).children().attr("class");
-           console.log(divI);
-            if (divI == "fas fa-minus"){
-                
-                $("div#"+thisDiv+" i.fa-minus").attr("class","fas fa-chevron-down");
-                $("div#body-"+ thisDiv).slideUp();
-                console.log("Test");
-            }
-            else {
-                $("div#"+thisDiv+" i.fa-chevron-down").attr("class","fas fa-minus");
-                $("div#body-"+ thisDiv).slideDown();
-                console.log("Test");
-            }
-
+            if (country.Country.toLowerCase() == valcountry) {
+                console.log(country);
+                addCountry(country.Country);
+        };
             });
+        
+
+    
         });
 
         
 });
 
 function printData(val){
-            countries.forEach(function (country) {
+    countries.forEach(function (country) {
 
-                if (country.Country.toLowerCase() == val) {
-                    console.log(country);
+        if (country.Country.toLowerCase() == val) {
+            console.log(country);
 
                     var html = $(`<div class="country-maximized">
                     <div class="country-header" id="${country.CountryCode}">
@@ -88,6 +146,7 @@ function printData(val){
                 </div>
                 </div>`).appendTo("body");
                 };
-            });
 
-};
+            });
+    };
+
