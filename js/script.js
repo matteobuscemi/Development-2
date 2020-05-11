@@ -94,26 +94,25 @@ $(document).ready(function(){
         });
         };
 
-    $("i#addcountry").click(function(){
-        var valcountry = $("input.search-txt").val().toLowerCase();
- 
-selectedCountries.forEach(function(selectedCountry){
-
-    console.log(selectedCountry.countryName);
-    if(selectedCountry.countryName.toLowerCase() == valcountry){
-        console.log("Already exists!");
-    }
-    else {
+        $("i#addcountry").click(function () {
+            var valcountry = $("input.search-txt").val().toLowerCase();
+    
+            selectedCountries.forEach(function (selectedCountry) {
+    
+                if (valcountry == selectedCountry.countryName.toLowerCase()) {
+                    console.log("Already exists!");
+                    var toDeleteId = selectedCountry.id;
+                    database.collection("Countries").doc(toDeleteId).delete();
+                }
+    
+            });
+    
             countries.forEach(function (country) {
                 if (country.Country.toLowerCase() == valcountry) {
                     addCountry(country.Country);
-            };
-                }); 
-        
-            };
-    
+                };
+            });
         });
-    });
     });
         
 
