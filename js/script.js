@@ -54,19 +54,18 @@ firebase.initializeApp({
            var thisDiv = $(this).attr("id");
            var thisDivClass = $(this).parent().attr("class");
            var divI = $(this).children().attr("class");
-           console.log(divI);
             if (divI == "fas fa-minus"){
                 
                 $("div#"+thisDiv+" i.fa-minus").attr("class","fas fa-chevron-down");
                 $("div#body-"+ thisDiv).slideUp();
                 $(this).parent().attr("class","country-minimized");
-                console.log("Test");
+
             }
             else {
                 $("div#"+thisDiv+" i.fa-chevron-down").attr("class","fas fa-minus");
                 $("div#body-"+ thisDiv).slideDown();
                 $(this).parent().attr("class","country-header");
-                console.log("Test");
+
             }
 
             });
@@ -101,7 +100,6 @@ $(document).ready(function(){
             selectedCountries.forEach(function (selectedCountry) {
     
                 if (valcountry == selectedCountry.countryName.toLowerCase()) {
-                    console.log("Already exists!");
                     var toDeleteId = selectedCountry.id;
                     database.collection("Countries").doc(toDeleteId).delete();
                 }
@@ -121,7 +119,7 @@ function printData(val,id){
     countries.forEach(function (country) {
 
         if (country.Country.toLowerCase() == val) {
-            console.log(country);
+            
 
                     var html = $(`<div class="country-maximized" id="${id}">
                     <div class="country-header" id="${country.CountryCode}">
