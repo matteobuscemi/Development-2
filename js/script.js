@@ -95,6 +95,7 @@ $(document).ready(function(){
         };
 
         $("i#addcountry").click(function () {
+            $("div.intro").remove();
             var valcountry = $("input.search-txt").val().toLowerCase();
     
             selectedCountries.forEach(function (selectedCountry) {
